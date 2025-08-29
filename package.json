@@ -1,0 +1,41 @@
+{
+  "name": "h5-video-embed-monorepo",
+  "version": "1.0.0",
+  "description": "H5 视频嵌入组件的 monorepo 项目",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "node scripts/start-dev.js",
+    "dev:npm": "npm run dev:server & npm run dev:demo",
+    "dev:server": "cd packages/server && npm run dev",
+    "dev:demo": "cd packages/demo-app && npm run dev",
+    "dev:all": "pnpm -r dev",
+    "build": "npm run build:lib && npm run build:demo",
+    "build:lib": "cd packages/h5-video-embed && npm run build",
+    "build:demo": "cd packages/demo-app && npm run build",
+    "build:all": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "install:all": "npm install && cd packages/server && npm install && cd ../demo-app && npm install && cd ../h5-video-embed && npm install",
+    "clean": "pnpm -r exec rm -rf node_modules dist build"
+  },
+  "keywords": [
+    "video",
+    "embed",
+    "react",
+    "h5",
+    "monorepo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

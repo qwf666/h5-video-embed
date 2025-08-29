@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo App 更新测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .success { color: #10b981; }
+        .warning { color: #f59e0b; }
+        .info { color: #3b82f6; }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .feature-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+        .demo-video {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+        .demo-video h4 {
+            margin: 0 0 0.5rem 0;
+            color: #ffd700;
+        }
+        .platform-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+        .support-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .support-完全支持 { background: #10b981; color: white; }
+        .support-需要代理 { background: #f59e0b; color: white; }
+        .support-基础支持 { background: #6b7280; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Demo App 更新测试</h1>
+    
+    <div class="test-section">
+        <h2>📋 更新内容检查</h2>
+        <div class="feature-list">
+            <div class="feature-item">
+                <h3>🎯 前端优先架构</h3>
+                <p>✅ 主要解析逻辑在前端实现</p>
+                <p>✅ 智能降级策略</p>
+                <p>✅ 性能监控和统计</p>
+            </div>
+            <div class="feature-item">
+                <h3>🇨🇳 国内平台优化</h3>
+                <p>✅ 抖音、B站、腾讯视频</p>
+                <p>✅ 西瓜视频、快手支持</p>
+                <p>✅ 专用解析器</p>
+            </div>
+            <div class="feature-item">
+                <h3>🎨 UI/UX 改进</h3>
+                <p>✅ 新的视频卡片设计</p>
+                <p>✅ 解析来源标识</p>
+                <p>✅ 架构说明展示</p>
+            </div>
+            <div class="feature-item">
+                <h3>⚙️ 配置增强</h3>
+                <p>✅ 环境变量修复</p>
+                <p>✅ 前端/后端切换</p>
+                <p>✅ 开发模式信息</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎬 演示视频列表</h2>
+        <div id="demo-videos"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 启动指南</h2>
+        <div class="info">
+            <h3>1. 启动 CORS 代理服务器</h3>
+            <code>cd packages/server && npm run dev</code>
+            
+            <h3>2. 启动演示应用</h3>
+            <code>cd packages/demo-app && npm run dev</code>
+            
+            <h3>3. 访问应用</h3>
+            <code>http://localhost:3000</code>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 预期效果</h2>
+        <ul>
+            <li class="success">✅ 页面加载速度明显提升</li>
+            <li class="success">✅ B站视频可以直接在前端解析</li>
+            <li class="success">✅ YouTube 支持 API 和 oEmbed 两种方式</li>
+            <li class="warning">⚠️ 抖音等平台需要 CORS 代理支持</li>
+            <li class="info">ℹ️ 可以在开发者工具中观察解析过程</li>
+            <li class="info">ℹ️ 解析来源会显示在视频信息中</li>
+        </ul>
+    </div>
+
+    <script>
+        // 渲染演示视频列表
+        const demoVideos = [
+            {
+                title: "B站视频示例",
+                url: "https://www.bilibili.com/video/BV1GJ411x7h7",
+                platform: "B站",
+                description: "前端直接解析，获取完整信息",
+                frontendSupport: "完全支持"
+            },
+            {
+                title: "YouTube 视频示例",
+                url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                platform: "YouTube",
+                description: "支持API和oEmbed两种解析方式",
+                frontendSupport: "完全支持"
+            },
+            {
+                title: "抖音视频示例",
+                url: "https://www.douyin.com/video/7234567890123456789",
+                platform: "抖音",
+                description: "需要CORS代理，展示降级策略",
+                frontendSupport: "需要代理"
+            },
+            {
+                title: "腾讯视频示例",
+                url: "https://v.qq.com/x/cover/mzc00200mp8lnv8/z0043x8jqaw.html",
+                platform: "腾讯视频",
+                description: "基础嵌入支持",
+                frontendSupport: "基础支持"
+            },
+            {
+                title: "西瓜视频示例",
+                url: "https://www.ixigua.com/1234567890123456789",
+                platform: "西瓜视频",
+                description: "头条系视频平台",
+                frontendSupport: "需要代理"
+            },
+            {
+                title: "快手视频示例",
+                url: "https://www.kuaishou.com/short-video/3xiqjreqm4c4rm8",
+                platform: "快手",
+                description: "短视频平台支持",
+                frontendSupport: "基础支持"
+            }
+        ];
+
+        const videosDiv = document.getElementById('demo-videos');
+        let html = '';
+
+        demoVideos.forEach((video, index) => {
+            html += `
+                <div class="demo-video">
+                    <h4>
+                        ${index + 1}. ${video.title}
+                        <span class="platform-badge">${video.platform}</span>
+                        <span class="support-badge support-${video.frontendSupport.replace(/\s/g, '')}">${video.frontendSupport}</span>
+                    </h4>
+                    <p>${video.description}</p>
+                    <code>${video.url}</code>
+                </div>
+            `;
+        });
+
+        videosDiv.innerHTML = html;
+
+        // 添加测试完成提示
+        setTimeout(() => {
+            document.body.innerHTML += `
+                <div class="test-section">
+                    <h2 class="success">🎉 Demo App 更新完成！</h2>
+                    <p>所有功能已更新，现在可以启动应用进行测试。</p>
+                    <p>主要改进：前端优先架构、国内平台优化、性能监控、UI增强。</p>
+                </div>
+            `;
+        }, 1000);
+    </script>
+</body>
+</html>

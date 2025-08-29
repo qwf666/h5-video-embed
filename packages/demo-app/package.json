@@ -1,0 +1,36 @@
+{
+  "name": "h5-video-embed-demo",
+  "version": "1.0.0",
+  "description": "H5 Video Embed 组件演示应用",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "h5-video-embed": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.0",
+    "vite": "^4.4.0"
+  },
+  "keywords": [
+    "react",
+    "video",
+    "embed",
+    "demo",
+    "example"
+  ],
+  "author": "",
+  "license": "MIT"
+}

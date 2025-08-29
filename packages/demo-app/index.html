@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="H5 Video Embed 组件演示应用 - 支持多种视频平台的 React 组件库" />
+    <meta name="keywords" content="video, embed, react, youtube, bilibili, vimeo, h5" />
+    <meta name="author" content="H5 Video Embed Team" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://h5-video-embed-demo.vercel.app/" />
+    <meta property="og:title" content="H5 Video Embed Demo" />
+    <meta property="og:description" content="一个用于嵌入各种视频平台内容的 React 组件库演示" />
+    <meta property="og:image" content="/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://h5-video-embed-demo.vercel.app/" />
+    <meta property="twitter:title" content="H5 Video Embed Demo" />
+    <meta property="twitter:description" content="一个用于嵌入各种视频平台内容的 React 组件库演示" />
+    <meta property="twitter:image" content="/og-image.jpg" />
+    
+    <title>H5 Video Embed Demo</title>
+    
+    <style>
+      /* 加载时的简单样式 */
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      
+      #root {
+        min-height: 100vh;
+      }
+      
+      /* 加载动画 */
+      .initial-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: white;
+        text-align: center;
+      }
+      
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- 初始加载动画 -->
+      <div class="initial-loading">
+        <div>
+          <div class="loading-spinner"></div>
+          <h2>H5 Video Embed Demo</h2>
+          <p>正在加载应用...</p>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

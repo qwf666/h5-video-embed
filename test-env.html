@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>环境变量测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .warning { color: #f59e0b; }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 H5 Video Embed 环境变量测试</h1>
+    
+    <div class="test-section">
+        <h2>📋 环境检查</h2>
+        <div id="env-check"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 功能测试</h2>
+        <div id="function-test"></div>
+    </div>
+
+    <script type="module">
+        // 测试环境变量
+        function testEnvironment() {
+            const envDiv = document.getElementById('env-check');
+            let html = '';
+
+            // 检查是否在 Vite 环境中
+            if (typeof import.meta !== 'undefined' && import.meta.env) {
+                html += '<p class="success">✅ 在 Vite 环境中运行</p>';
+                html += '<p>🔧 环境模式: <code>' + import.meta.env.MODE + '</code></p>';
+                html += '<p>🏗️ 开发模式: <code>' + import.meta.env.DEV + '</code></p>';
+                
+                // 检查自定义环境变量
+                const youtubeKey = import.meta.env.VITE_YOUTUBE_API_KEY;
+                const serverUrl = import.meta.env.VITE_SERVER_URL;
+                
+                html += '<h3>📝 自定义环境变量:</h3>';
+                html += '<p>YouTube API Key: ' + 
+                       (youtubeKey ? '<span class="success">已配置</span>' : '<span class="warning">未配置</span>') + '</p>';
+                html += '<p>服务器地址: <code>' + (serverUrl || 'http://localhost:3001') + '</code></p>';
+                
+            } else if (typeof process !== 'undefined' && process.env) {
+                html += '<p class="warning">⚠️ 在 Node.js 环境中运行</p>';
+                html += '<p>这个测试应该在浏览器中运行</p>';
+            } else {
+                html += '<p class="error">❌ 无法检测到环境变量系统</p>';
+            }
+
+            envDiv.innerHTML = html;
+        }
+
+        // 测试基础功能
+        function testFunctions() {
+            const testDiv = document.getElementById('function-test');
+            let html = '';
+
+            try {
+                // 测试 fetch API
+                if (typeof fetch !== 'undefined') {
+                    html += '<p class="success">✅ Fetch API 可用</p>';
+                } else {
+                    html += '<p class="error">❌ Fetch API 不可用</p>';
+                }
+
+                // 测试 URL 构造
+                try {
+                    new URL('https://example.com');
+                    html += '<p class="success">✅ URL 构造器可用</p>';
+                } catch (e) {
+                    html += '<p class="error">❌ URL 构造器不可用</p>';
+                }
+
+                // 测试 JSON 解析
+                try {
+                    JSON.parse('{"test": true}');
+                    html += '<p class="success">✅ JSON 解析可用</p>';
+                } catch (e) {
+                    html += '<p class="error">❌ JSON 解析不可用</p>';
+                }
+
+                html += '<h3>🎯 建议:</h3>';
+                html += '<p>如果所有测试都通过，您可以正常使用 H5 Video Embed 组件！</p>';
+                html += '<p>如果有问题，请检查浏览器兼容性和网络连接。</p>';
+
+            } catch (error) {
+                html += '<p class="error">❌ 测试过程中出现错误: ' + error.message + '</p>';
+            }
+
+            testDiv.innerHTML = html;
+        }
+
+        // 运行测试
+        testEnvironment();
+        testFunctions();
+
+        // 添加刷新按钮
+        document.body.innerHTML += `
+            <div class="test-section">
+                <button onclick="location.reload()" style="
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    font-weight: 500;
+                ">🔄 重新测试</button>
+            </div>
+        `;
+    </script>
+</body>
+</html>

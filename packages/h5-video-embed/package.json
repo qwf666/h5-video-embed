@@ -1,0 +1,53 @@
+{
+  "name": "h5-video-embed",
+  "version": "1.0.0",
+  "description": "H5 视频嵌入 React 组件库",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.js",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "test": "vitest"
+  },
+  "keywords": [
+    "react",
+    "video",
+    "embed",
+    "player",
+    "h5"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^4.0.0",
+    "vite-plugin-dts": "^3.0.0",
+    "vitest": "^0.34.0"
+  },
+  "dependencies": {}
+}
