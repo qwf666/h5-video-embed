@@ -75,5 +75,17 @@ const copyRecursive = (src, dest) => {
 
 copyRecursive(distDir, rootDistDir);
 
+// 步骤6: 确保API文件夹存在（Vercel需要）
+console.log('\n📡 步骤6: 验证API文件夹...');
+const apiDir = path.join(rootDir, 'api');
+if (fs.existsSync(apiDir)) {
+  const apiFiles = fs.readdirSync(apiDir, { recursive: true });
+  console.log(`📡 API文件 (${apiFiles.length} 个):`);
+  apiFiles.forEach(file => console.log(`  - api/${file}`));
+} else {
+  console.warn('⚠️ 警告: api文件夹不存在，Serverless Functions将不可用');
+}
+
 console.log('\n🎉 Vercel构建流程完成!');
-console.log(`📦 输出目录: ${rootDistDir}`);
+console.log(`📦 前端输出: ${rootDistDir}`);
+console.log(`📡 API目录: ${apiDir}`);

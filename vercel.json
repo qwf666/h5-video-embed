@@ -3,51 +3,12 @@
   "buildCommand": "pnpm -w run vercel-build",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile",
-  "framework": null,
   "functions": {
-    "api/test.js": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 10
-    },
-    "api/video.js": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 30
-    },
-    "api/video/parse.js": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 30
-    },
-    "api/proxy/parse.js": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 30
-    },
-    "api/proxy/bilibili/parse.js": {
+    "api/**/*.js": {
       "runtime": "nodejs18.x",
       "maxDuration": 30
     }
   },
-  "rewrites": [
-    {
-      "source": "/api/test",
-      "destination": "/api/test.js"
-    },
-    {
-      "source": "/api/proxy/bilibili/parse",
-      "destination": "/api/proxy/bilibili/parse.js"
-    },
-    {
-      "source": "/api/proxy/parse",
-      "destination": "/api/proxy/parse.js"
-    },
-    {
-      "source": "/api/video/parse",
-      "destination": "/api/video/parse.js"
-    },
-    {
-      "source": "/api/video",
-      "destination": "/api/video.js"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
