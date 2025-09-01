@@ -32,7 +32,6 @@ class VideoParser {
    */
   async parseVideo(url) {
     const platform = this.detectPlatform(url);
-    
     if (!platform) {
       throw new Error('不支持的视频平台');
     }
@@ -42,7 +41,6 @@ class VideoParser {
     try {
       const parser = this.parsers[platform];
       const result = await parser.parse(url);
-      
       return {
         success: true,
         data: result,
@@ -51,7 +49,6 @@ class VideoParser {
       };
     } catch (error) {
       console.error(`${platform} 解析失败:`, error);
-      
       // 如果前端解析失败，可以选择调用后端
       if (this.corsProxy) {
         try {
@@ -61,7 +58,6 @@ class VideoParser {
           throw new Error(`前端和后端解析都失败: ${error.message}, ${backendError.message}`);
         }
       }
-      
       throw error;
     }
   }
@@ -70,6 +66,16 @@ class VideoParser {
    * 检测视频平台
    */
   detectPlatform(url) {
+    // 使用各解析器的静态检测方法，提高准确性
+    if (BilibiliParser.canParse(url)) return 'bilibili';
+    if (DouyinParser.canParse && DouyinParser.canParse(url)) return 'douyin';
+    if (TencentParser.canParse && TencentParser.canParse(url)) return 'tencent';
+    if (XiguaParser.canParse && XiguaParser.canParse(url)) return 'xigua';
+    if (KuaishouParser.canParse && KuaishouParser.canParse(url)) return 'kuaishou';
+    if (YouTubeParser.canParse && YouTubeParser.canParse(url)) return 'youtube';
+    if (VimeoParser.canParse && VimeoParser.canParse(url)) return 'vimeo';
+
+    // 回退到正则匹配
     const patterns = {
       bilibili: /bilibili\.com|b23\.tv/,
       douyin: /douyin\.com|dy\.com|iesdouyin\.com/,

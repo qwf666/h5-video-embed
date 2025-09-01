@@ -173,7 +173,6 @@ const VideoEmbed = ({
         
         try {
           const result = await parserRef.current.parseVideo(url);
-          debugger
           setVideoData(result.data);
           setParseSource(result.source);
           onLoad && onLoad(result.data, result.source);

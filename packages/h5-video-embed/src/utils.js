@@ -16,10 +16,25 @@ export const extractVideoId = (url) => {
   }
 
   // Bilibili
-  const bilibiliRegex = /(?:https?:\/\/)?(?:www\.)?bilibili\.com\/video\/(BV[a-zA-Z0-9]+|av\d+)/;
-  const bilibiliMatch = url.match(bilibiliRegex);
-  if (bilibiliMatch) {
-    return bilibiliMatch[1];
+  // 匹配多种B站链接类型
+  const bilibiliPatterns = [
+    // 普通视频: https://www.bilibili.com/video/BV1xx411c7mD
+    /(?:https?:\/\/)?(?:www\.)?bilibili\.com\/video\/(BV[a-zA-Z0-9]+|av\d+)/,
+    // 番剧/电影: https://www.bilibili.com/bangumi/play/ep123456
+    /(?:https?:\/\/)?(?:www\.)?bilibili\.com\/bangumi\/play\/(ep\d+|ss\d+)/,
+    // 直播: https://live.bilibili.com/12345
+    /(?:https?:\/\/)?live\.bilibili\.com\/(\d+)/,
+    // 专栏: https://www.bilibili.com/read/cv12345678
+    /(?:https?:\/\/)?(?:www\.)?bilibili\.com\/read\/(cv\d+)/,
+    // 动态: https://t.bilibili.com/123456789
+    /(?:https?:\/\/)?t\.bilibili\.com\/(\d+)/
+  ];
+  
+  for (const pattern of bilibiliPatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return match[1];
+    }
   }
 
   // Vimeo
