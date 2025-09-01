@@ -248,7 +248,7 @@ pnpm install
 pnpm run dev
 ```
 
-访问 http://localhost:5173 查看演示。
+访问 https://h5-video-embed-demo-app.vercel.app/ 查看演示。
 
 ### 项目结构
 
