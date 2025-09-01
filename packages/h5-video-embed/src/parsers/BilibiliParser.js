@@ -2,6 +2,7 @@
 class BilibiliParser {
   constructor(options = {}) {
     this.corsProxy = options.corsProxy;
+    this.strictFrontendOnly = options.strictFrontendOnly || false;
   }
 
   async parse(url) {
@@ -27,14 +28,23 @@ class BilibiliParser {
           throw new Error(`不支持的B站内容类型: ${extractResult.type}`);
       }
     } catch (error) {
-      console.warn('直接API调用失败，尝试通过代理:', error.message);
+      console.warn('直接API调用失败:', error.message);
+      
+      // 严格前端模式下不使用代理，直接返回基础信息
+      if (this.strictFrontendOnly) {
+        console.log('⚡ 严格前端模式：返回基础解析信息');
+        return this.createFallbackData(extractResult, url);
+      }
       
       if (this.corsProxy) {
+        console.log('🔄 尝试通过代理解析');
         const result = await this.parseViaProxy(extractResult, url);
         return result;
       }
       
-      throw error;
+      // 如果没有代理，也返回基础信息
+      console.log('📦 无代理服务器，返回基础解析信息');
+      return this.createFallbackData(extractResult, url);
     }
   }
 
@@ -501,6 +511,91 @@ class BilibiliParser {
     ];
     
     return patterns.some(pattern => pattern.test(url));
+  }
+
+  // 创建基础解析数据（当API调用失败时使用）
+  createFallbackData(extractResult, originalUrl) {
+    const id = extractResult.id;
+    const baseData = {
+      id: id,
+      title: this.extractTitleFromUrl(originalUrl) || `B站${extractResult.type}内容`,
+      description: '基础解析模式：部分信息可能不完整',
+      thumbnail: 'https://i0.hdslb.com/bfs/archive/default.jpg', // B站默认封面
+      webpage_url: originalUrl,
+      platform: 'bilibili',
+      platform_name: 'B站',
+      extractor: 'bilibili_frontend_fallback',
+      content_type: extractResult.type,
+      
+      // 标记为基础解析
+      is_fallback: true,
+      fallback_reason: '无法访问B站API，仅提供基础播放功能',
+      
+      // 基础播放支持
+      supports_embed: true
+    };
+
+    // 根据不同类型添加嵌入信息
+    switch (extractResult.type) {
+      case 'video':
+        baseData.embed = {
+          type: 'iframe',
+          url: `https://player.bilibili.com/player.html?bvid=${id}&autoplay=0`,
+          width: 1280,
+          height: 720
+        };
+        if (extractResult.page) {
+          baseData.embed.url += `&p=${extractResult.page}`;
+        }
+        break;
+        
+      case 'bangumi':
+        baseData.embed = {
+          type: 'iframe',
+          url: originalUrl.includes('player.bilibili.com') ? originalUrl : `https://www.bilibili.com/bangumi/play/${id}`,
+          width: 1280,
+          height: 720
+        };
+        break;
+        
+      case 'live':
+        baseData.embed = {
+          type: 'iframe',
+          url: `https://live.bilibili.com/blanc/${id}`,
+          width: 1280,
+          height: 720
+        };
+        baseData.live_status = 1; // 假设是直播中
+        break;
+        
+      default:
+        baseData.embed = {
+          type: 'link',
+          url: originalUrl,
+          width: 1280,
+          height: 720
+        };
+    }
+
+    return baseData;
+  }
+
+  // 从URL中提取可能的标题信息
+  extractTitleFromUrl(url) {
+    // 尝试从URL参数中提取标题
+    const urlObj = new URL(url);
+    const searchParams = urlObj.searchParams;
+    
+    // 检查常见的标题参数
+    const titleParams = ['title', 't', 'name'];
+    for (const param of titleParams) {
+      const title = searchParams.get(param);
+      if (title) {
+        return decodeURIComponent(title);
+      }
+    }
+    
+    return null;
   }
 
   // 获取支持的URL示例

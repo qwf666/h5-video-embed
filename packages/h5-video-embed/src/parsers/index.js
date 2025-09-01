@@ -11,19 +11,39 @@ class VideoParser {
   constructor(options = {}) {
     this.corsProxy = options.corsProxy || null; // CORS代理服务器
     this.youtubeApiKey = options.youtubeApiKey || null;
+    this.strictFrontendOnly = options.strictFrontendOnly || false; // 严格前端模式
     
     // 初始化各平台解析器
     this.parsers = {
-      bilibili: new BilibiliParser({ corsProxy: this.corsProxy }),
-      douyin: new DouyinParser({ corsProxy: this.corsProxy }),
-      tencent: new TencentParser({ corsProxy: this.corsProxy }),
-      xigua: new XiguaParser({ corsProxy: this.corsProxy }),
-      kuaishou: new KuaishouParser({ corsProxy: this.corsProxy }),
-      youtube: new YouTubeParser({ 
-        corsProxy: this.corsProxy, 
-        apiKey: this.youtubeApiKey 
+      bilibili: new BilibiliParser({ 
+        corsProxy: this.strictFrontendOnly ? null : this.corsProxy,
+        strictFrontendOnly: this.strictFrontendOnly
       }),
-      vimeo: new VimeoParser({ corsProxy: this.corsProxy })
+      douyin: new DouyinParser({ 
+        corsProxy: this.strictFrontendOnly ? null : this.corsProxy,
+        strictFrontendOnly: this.strictFrontendOnly
+      }),
+      tencent: new TencentParser({ 
+        corsProxy: this.strictFrontendOnly ? null : this.corsProxy,
+        strictFrontendOnly: this.strictFrontendOnly
+      }),
+      xigua: new XiguaParser({ 
+        corsProxy: this.strictFrontendOnly ? null : this.corsProxy,
+        strictFrontendOnly: this.strictFrontendOnly
+      }),
+      kuaishou: new KuaishouParser({ 
+        corsProxy: this.strictFrontendOnly ? null : this.corsProxy,
+        strictFrontendOnly: this.strictFrontendOnly
+      }),
+      youtube: new YouTubeParser({ 
+        corsProxy: this.strictFrontendOnly ? null : this.corsProxy, 
+        apiKey: this.youtubeApiKey,
+        strictFrontendOnly: this.strictFrontendOnly
+      }),
+      vimeo: new VimeoParser({ 
+        corsProxy: this.strictFrontendOnly ? null : this.corsProxy,
+        strictFrontendOnly: this.strictFrontendOnly
+      })
     };
   }
 
@@ -49,6 +69,13 @@ class VideoParser {
       };
     } catch (error) {
       console.error(`${platform} 解析失败:`, error);
+      
+      // 严格前端模式下不调用后端
+      if (this.strictFrontendOnly) {
+        console.log('⚡ 严格前端模式：不会降级到后端解析');
+        throw new Error(`前端解析失败: ${error.message}`);
+      }
+      
       // 如果前端解析失败，可以选择调用后端
       if (this.corsProxy) {
         try {

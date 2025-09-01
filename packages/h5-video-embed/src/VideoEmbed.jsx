@@ -150,9 +150,10 @@ const VideoEmbed = ({
   useEffect(() => {
     parserRef.current = new VideoParser({
       corsProxy: serverUrl,
-      youtubeApiKey: youtubeApiKey
+      youtubeApiKey: youtubeApiKey,
+      strictFrontendOnly: strictFrontendOnly
     });
-  }, [serverUrl, youtubeApiKey]);
+  }, [serverUrl, youtubeApiKey, strictFrontendOnly]);
 
   useEffect(() => {
     if (!url || !isValidUrl(url)) {
