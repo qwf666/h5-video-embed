@@ -1,5 +1,5 @@
 // Vercel Serverless Function for video parsing - matches /api/video/parse endpoint
-const fetch = require('node-fetch');
+// 使用Node.js 18+内置的fetch，无需导入
 
 // CORS headers
 const corsHeaders = {

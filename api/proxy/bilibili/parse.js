@@ -1,5 +1,5 @@
 // Vercel Serverless Function for Bilibili proxy parsing
-const fetch = require('node-fetch');
+// 使用Node.js 18+内置的fetch，无需导入
 
 // 格式化时长
 const formatDuration = (seconds) => {

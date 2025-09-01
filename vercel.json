@@ -5,6 +5,10 @@
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": null,
   "functions": {
+    "api/test.js": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 10
+    },
     "api/video.js": {
       "runtime": "nodejs18.x",
       "maxDuration": 30
@@ -23,6 +27,10 @@
     }
   },
   "rewrites": [
+    {
+      "source": "/api/test",
+      "destination": "/api/test.js"
+    },
     {
       "source": "/api/proxy/bilibili/parse",
       "destination": "/api/proxy/bilibili/parse.js"
