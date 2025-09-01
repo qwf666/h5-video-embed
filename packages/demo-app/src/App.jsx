@@ -5,7 +5,7 @@ import "./App.css";
 const DEMO_VIDEOS = [
   {
     title: "B站视频示例",
-    url: "https://www.bilibili.com/bangumi/play/ep733317?spm_id_from=333.337.0.0",
+    url: "https://www.bilibili.com/video/BV1A1hXzHEou/?spm_id_from=333.1007.tianma.3-2-8.click",
     platform: "B站",
     description: "前端直接解析，获取完整信息",
     frontendSupport: "完全支持"
@@ -26,7 +26,7 @@ const DEMO_VIDEOS = [
   },
   {
     title: "腾讯视频示例",
-    url: "https://v.qq.com/x/cover/mzc00200mp8lnv8/z0043x8jqaw.html",
+    url: "https://v.qq.com/x/cover/mzc002008260hny/x410143cph8.html",
     platform: "腾讯视频",
     description: "基础嵌入支持",
     frontendSupport: "基础支持"
@@ -58,7 +58,7 @@ function App() {
     muted: false,
     preferFrontend: true,
   });
-  const [parseMode, setParseMode] = useState('auto'); // 'auto', 'frontend', 'backend'
+  const [parseMode, setParseMode] = useState('frontend'); // 'auto', 'frontend', 'backend' - 默认纯前端
   const [logs, setLogs] = useState([]);
   const [performanceStats, setPerformanceStats] = useState({
     totalRequests: 0,
@@ -136,9 +136,18 @@ function App() {
               autoplay={videoSettings.autoplay}
               controls={videoSettings.controls}
               muted={videoSettings.muted}
-              serverUrl={import.meta.env.VITE_SERVER_URL || "http://localhost:3001"}
+              serverUrl={
+                // Vercel环境中使用当前域名，本地开发使用localhost
+                import.meta.env.VITE_SERVER_URL || 
+                (window.location.hostname === 'localhost' ? 
+                  "http://localhost:3001" : 
+                  window.location.origin
+                )
+              }
               youtubeApiKey={import.meta.env.VITE_YOUTUBE_API_KEY}
               preferFrontend={parseMode === 'frontend' || (parseMode === 'auto' && videoSettings.preferFrontend)}
+              strictFrontendOnly={parseMode === 'frontend'} // 纯前端模式不调用后端
+              forceBackendOnly={parseMode === 'backend'} // 纯后端模式强制后端解析
               onLoad={handleVideoLoad}
               onError={handleVideoError}
               className="demo-video"
@@ -228,15 +237,16 @@ function App() {
                     checked={parseMode === 'frontend'}
                     onChange={(e) => {
                       setParseMode(e.target.value);
-                      addLog('info', '切换到前端解析：所有视频都优先使用前端解析');
+                      addLog('info', '切换到纯前端解析：严格模式，不会调用后端接口');
                     }}
                   />
                   <div className="mode-info">
                     <div className="mode-title">⚡ 纯前端解析</div>
                     <div className="mode-desc">
-                      强制使用前端解析器<br/>
-                      速度快，无服务器依赖<br/>
-                      适用于支持CORS的平台
+                      <strong>严格前端模式 - 不调用后端接口</strong><br/>
+                      100%浏览器端执行，无服务器依赖<br/>
+                      适用于B站、YouTube等支持CORS的平台<br/>
+                      🚫 保证不会向后端发送任何请求
                     </div>
                   </div>
                 </label>
@@ -249,15 +259,16 @@ function App() {
                     checked={parseMode === 'backend'}
                     onChange={(e) => {
                       setParseMode(e.target.value);
-                      addLog('info', '切换到后端解析：所有视频都使用后端解析');
+                      addLog('info', '切换到纯后端解析：强制使用后端增强解析器');
                     }}
                   />
                   <div className="mode-info">
                     <div className="mode-title">🔄 纯后端解析</div>
                     <div className="mode-desc">
-                      强制使用后端解析器<br/>
-                      功能完整，支持所有平台<br/>
-                      需要后端服务器支持
+                      <strong>强制后端模式 - 跳过前端解析</strong><br/>
+                      使用增强的后端解析器<br/>
+                      支持所有平台，数据最完整<br/>
+                      🌐 需要后端服务器运行
                     </div>
                   </div>
                 </label>
@@ -324,17 +335,51 @@ function App() {
           </section>
         </div>
 
+        {/* 实时状态监控 */}
+        <section className="realtime-status-section">
+          <h3>📡 实时解析状态</h3>
+          <div className="status-cards">
+            <div className={`status-card mode-indicator ${parseMode}`}>
+              <div className="status-icon">
+                {parseMode === 'auto' && '🤖'}
+                {parseMode === 'frontend' && '⚡'}
+                {parseMode === 'backend' && '🔄'}
+              </div>
+              <div className="status-content">
+                <div className="status-title">当前模式</div>
+                <div className="status-value">
+                  {parseMode === 'auto' && '智能模式'}
+                  {parseMode === 'frontend' && '纯前端解析'}
+                  {parseMode === 'backend' && '纯后端解析'}
+                </div>
+              </div>
+            </div>
+            
+            <div className="status-card network-status">
+              <div className="status-icon">🌐</div>
+              <div className="status-content">
+                <div className="status-title">后端请求</div>
+                <div className={`status-value ${parseMode === 'frontend' ? 'disabled' : 'enabled'}`}>
+                  {parseMode === 'frontend' ? '🚫 已禁用' : '✅ 允许'}
+                </div>
+              </div>
+            </div>
+            
+            <div className="status-card separation-status">
+              <div className="status-icon">🔒</div>
+              <div className="status-content">
+                <div className="status-title">前后端分离</div>
+                <div className={`status-value ${parseMode === 'frontend' ? 'strict' : 'flexible'}`}>
+                  {parseMode === 'frontend' ? '🔒 严格模式' : '🔄 灵活模式'}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* 性能统计 */}
         <section className="stats-section">
           <h3>📊 解析统计</h3>
-          <div className="current-mode-info">
-            <span className="current-mode-label">当前解析模式:</span>
-            <span className={`current-mode-badge mode-${parseMode}`}>
-              {parseMode === 'auto' && '🤖 智能模式'}
-              {parseMode === 'frontend' && '⚡ 纯前端解析'}
-              {parseMode === 'backend' && '🔄 纯后端解析'}
-            </span>
-          </div>
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-number">{performanceStats.totalRequests}</div>

@@ -16,6 +16,7 @@
     "build:lib": "cd packages/h5-video-embed && npm run build",
     "build:demo": "cd packages/demo-app && npm run build",
     "build:all": "pnpm -r build",
+    "vercel-build": "node scripts/vercel-build.js",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
     "install:all": "npm install && cd packages/server && npm install && cd ../demo-app && npm install && cd ../h5-video-embed && npm install",

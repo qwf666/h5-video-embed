@@ -1030,3 +1030,163 @@
     padding: 1rem;
   }
 }
+
+/* 实时状态监控样式 */
+.realtime-status-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.realtime-status-section h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.status-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.status-card.mode-indicator.auto {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+}
+
+.status-card.mode-indicator.frontend {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  border-color: #11998e;
+}
+
+.status-card.mode-indicator.backend {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  border-color: #ff6b6b;
+}
+
+.status-card.network-status {
+  background: #f8f9fa;
+  border-color: #e9ecef;
+}
+
+.status-card.separation-status {
+  background: #fff3cd;
+  border-color: #ffeaa7;
+}
+
+.status-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.status-content {
+  flex: 1;
+}
+
+.status-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  opacity: 0.8;
+}
+
+.status-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.status-value.disabled {
+  color: #dc3545;
+}
+
+.status-value.enabled {
+  color: #28a745;
+}
+
+.status-value.strict {
+  color: #fd7e14;
+  font-weight: 700;
+}
+
+.status-value.flexible {
+  color: #6c757d;
+}
+
+/* 解析模式选择器增强样式 */
+.parsing-mode-section .mode-option {
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.parsing-mode-section .mode-option:hover {
+  border-color: #9fc6f0;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+.parsing-mode-section .mode-option.active {
+  border-color: #9bc5f1;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.parsing-mode-section .mode-option input[type="radio"] {
+  margin-top: 0.25rem;
+  transform: scale(1.2);
+}
+
+.parsing-mode-section .mode-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.parsing-mode-section .mode-desc {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.parsing-mode-section .mode-desc strong {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .status-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .parsing-mode-section .mode-option {
+    padding: 0.75rem;
+  }
+  
+  .realtime-status-section {
+    padding: 1rem;
+  }
+}

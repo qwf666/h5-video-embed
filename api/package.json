@@ -1,0 +1,12 @@
+{
+  "name": "h5-video-embed-api",
+  "version": "1.0.0",
+  "description": "Vercel Serverless Functions for H5 Video Embed",
+  "main": "video.js",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
