@@ -1,6 +1,6 @@
 // 简单的测试端点，验证Vercel Serverless Functions是否正常工作
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // 设置CORS头
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');

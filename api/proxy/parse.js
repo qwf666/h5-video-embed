@@ -60,7 +60,7 @@ const simpleParseUrl = async (url) => {
   throw new Error('不支持的视频平台或链接格式');
 };
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     Object.entries(corsHeaders).forEach(([key, value]) => {
