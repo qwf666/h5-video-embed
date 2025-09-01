@@ -453,7 +453,7 @@ const VideoEmbed = ({
       )}
       
       {/* 视频信息覆盖层 */}
-      <div className="video-info">
+      {/* <div className="video-info">
         <div className="video-title">{videoData.title}</div>
         <div className="video-meta">
           <span className="platform-badge">{videoData.platform_name || videoData.platform}</span>
@@ -472,7 +472,7 @@ const VideoEmbed = ({
             {videoData.like_count > 0 && <span>👍 {formatCount(videoData.like_count)}</span>}
           </div>
         )}
-      </div>
+      </div> */}
       
       <style jsx>{`
         .video-embed-container {

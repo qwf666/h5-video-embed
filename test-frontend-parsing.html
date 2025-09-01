@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试纯前端 B 站解析</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .success {
+            border-color: #28a745;
+            background: #f8fff8;
+        }
+        .error {
+            border-color: #dc3545;
+            background: #fff8f8;
+        }
+        .loading {
+            border-color: #ffc107;
+            background: #fffef8;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .status {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 纯前端 B 站解析测试</h1>
+        <p>此测试验证在不调用后端 API 的情况下解析 B 站视频</p>
+        
+        <div id="test-results"></div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="runAllTests()">运行所有测试</button>
+            <button onclick="clearResults()">清空结果</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // 简化的 BilibiliParser 测试版本
+        class SimpleBilibiliParser {
+            constructor(options = {}) {
+                this.strictFrontendOnly = options.strictFrontendOnly || false;
+            }
+
+            async parse(url) {
+                const extractResult = this.extractBvid(url);
+                if (!extractResult) {
+                    throw new Error('无效的B站链接');
+                }
+
+                console.log(`📺 检测到B站内容: ${JSON.stringify(extractResult)}`);
+
+                // 严格前端模式下直接返回基础信息，不尝试API调用
+                if (this.strictFrontendOnly) {
+                    console.log('⚡ 严格前端模式：直接返回基础解析信息');
+                    return this.createFallbackData(extractResult, url);
+                }
+
+                // 尝试调用B站API
+                try {
+                    if (extractResult.type === 'video') {
+                        const videoInfo = await this.getVideoInfo(extractResult.id);
+                        return this.formatVideoData(videoInfo, url, extractResult);
+                    }
+                    // 其他类型暂时返回基础信息
+                    return this.createFallbackData(extractResult, url);
+                } catch (error) {
+                    console.warn('API调用失败，返回基础信息:', error.message);
+                    return this.createFallbackData(extractResult, url);
+                }
+            }
+
+            async getVideoInfo(bvid) {
+                const apiUrl = `https://api.bilibili.com/x/web-interface/view?bvid=${bvid}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                        'Referer': 'https://www.bilibili.com/',
+                        'Origin': 'https://www.bilibili.com'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`B站API请求失败: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.code !== 0) {
+                    throw new Error(`B站API错误: ${result.message}`);
+                }
+
+                return result.data;
+            }
+
+            formatVideoData(data, originalUrl, extractResult) {
+                return {
+                    id: data.bvid,
+                    title: data.title,
+                    description: data.desc || '',
+                    thumbnail: data.pic,
+                    uploader: data.owner?.name || '未知用户',
+                    view_count: data.stat?.view || 0,
+                    like_count: data.stat?.like || 0,
+                    duration: data.duration,
+                    webpage_url: originalUrl,
+                    platform: 'bilibili',
+                    platform_name: 'B站',
+                    extractor: 'bilibili_frontend',
+                    content_type: 'video',
+                    embed: {
+                        type: 'iframe',
+                        url: `https://player.bilibili.com/player.html?bvid=${data.bvid}&autoplay=0`,
+                        width: 1280,
+                        height: 720
+                    }
+                };
+            }
+
+            createFallbackData(extractResult, originalUrl) {
+                const id = extractResult.id;
+                return {
+                    id: id,
+                    title: `B站${extractResult.type}内容 - ${id}`,
+                    description: '纯前端解析模式：部分信息可能不完整',
+                    thumbnail: 'https://i0.hdslb.com/bfs/archive/default.jpg',
+                    webpage_url: originalUrl,
+                    platform: 'bilibili',
+                    platform_name: 'B站',
+                    extractor: 'bilibili_frontend_fallback',
+                    content_type: extractResult.type,
+                    is_fallback: true,
+                    fallback_reason: '纯前端模式，未调用任何后端接口',
+                    supports_embed: true,
+                    embed: {
+                        type: 'iframe',
+                        url: `https://player.bilibili.com/player.html?bvid=${id}&autoplay=0`,
+                        width: 1280,
+                        height: 720
+                    }
+                };
+            }
+
+            extractBvid(url) {
+                const patterns = [
+                    /(?:bilibili\.com\/video\/|b23\.tv\/)(BV[a-zA-Z0-9]+)/i,
+                    /(?:bilibili\.com\/video\/|b23\.tv\/)(av\d+)/i,
+                    /(?:bilibili\.com\/bangumi\/play\/)(ep\d+)/i,
+                    /(?:bilibili\.com\/bangumi\/play\/)(ss\d+)/i,
+                    /(?:live\.bilibili\.com\/)(h5\/)?(\d+)/i
+                ];
+                
+                for (const pattern of patterns) {
+                    const match = url.match(pattern);
+                    if (match) {
+                        let id = match[1] || match[2];
+                        
+                        if (id.startsWith('ep') || id.startsWith('ss')) {
+                            return { type: 'bangumi', id: id };
+                        }
+                        
+                        if (/^\d+$/.test(id)) {
+                            return { type: 'live', id: id };
+                        }
+                        
+                        return { type: 'video', id: id };
+                    }
+                }
+                
+                return null;
+            }
+        }
+
+        // 测试用例
+        const testCases = [
+            {
+                name: '标准 BV 号视频（严格前端模式）',
+                url: 'https://www.bilibili.com/video/BV1A1hXzHEou',
+                strictFrontendOnly: true,
+                expectedNoApiCall: true
+            },
+            {
+                name: '标准 BV 号视频（允许 API 调用）',
+                url: 'https://www.bilibili.com/video/BV1A1hXzHEou',
+                strictFrontendOnly: false,
+                expectedNoApiCall: false
+            },
+            {
+                name: '分P视频（严格前端模式）',
+                url: 'https://www.bilibili.com/video/BV1A1hXzHEou?p=2',
+                strictFrontendOnly: true,
+                expectedNoApiCall: true
+            },
+            {
+                name: '番剧链接（严格前端模式）',
+                url: 'https://www.bilibili.com/bangumi/play/ep123456',
+                strictFrontendOnly: true,
+                expectedNoApiCall: true
+            }
+        ];
+
+        // 测试运行器
+        window.runAllTests = async function() {
+            const resultsContainer = document.getElementById('test-results');
+            resultsContainer.innerHTML = '';
+
+            for (let i = 0; i < testCases.length; i++) {
+                const testCase = testCases[i];
+                await runSingleTest(testCase, i + 1);
+            }
+        };
+
+        async function runSingleTest(testCase, index) {
+            const resultsContainer = document.getElementById('test-results');
+            
+            // 创建测试项目容器
+            const testDiv = document.createElement('div');
+            testDiv.className = 'test-item loading';
+            testDiv.innerHTML = `
+                <div class="status">测试 ${index}: ${testCase.name}</div>
+                <div>URL: ${testCase.url}</div>
+                <div>严格前端模式: ${testCase.strictFrontendOnly ? '是' : '否'}</div>
+                <div>测试中...</div>
+            `;
+            resultsContainer.appendChild(testDiv);
+
+            try {
+                const parser = new SimpleBilibiliParser({ 
+                    strictFrontendOnly: testCase.strictFrontendOnly 
+                });
+
+                // 记录开始时间和网络请求
+                const startTime = Date.now();
+                let apiCallMade = false;
+
+                // 监听网络请求（简单检测）
+                const originalFetch = window.fetch;
+                window.fetch = function(...args) {
+                    if (args[0].includes('api.bilibili.com')) {
+                        apiCallMade = true;
+                        console.log('🌐 检测到B站API调用:', args[0]);
+                    }
+                    return originalFetch.apply(this, args);
+                };
+
+                const result = await parser.parse(testCase.url);
+                const endTime = Date.now();
+
+                // 恢复原始fetch
+                window.fetch = originalFetch;
+
+                // 验证结果
+                const success = testCase.expectedNoApiCall ? !apiCallMade : true;
+                
+                testDiv.className = success ? 'test-item success' : 'test-item error';
+                testDiv.innerHTML = `
+                    <div class="status">测试 ${index}: ${testCase.name} - ${success ? '✅ 通过' : '❌ 失败'}</div>
+                    <div>URL: ${testCase.url}</div>
+                    <div>严格前端模式: ${testCase.strictFrontendOnly ? '是' : '否'}</div>
+                    <div>是否调用API: ${apiCallMade ? '是' : '否'}</div>
+                    <div>解析时间: ${endTime - startTime}ms</div>
+                    <div>解析结果:</div>
+                    <pre>${JSON.stringify({
+                        id: result.id,
+                        title: result.title,
+                        platform: result.platform_name,
+                        extractor: result.extractor,
+                        is_fallback: result.is_fallback,
+                        supports_embed: result.supports_embed
+                    }, null, 2)}</pre>
+                `;
+
+                if (!success) {
+                    console.error(`测试失败: ${testCase.name}`, {
+                        expected: `API调用=${!testCase.expectedNoApiCall}`,
+                        actual: `API调用=${apiCallMade}`
+                    });
+                }
+
+            } catch (error) {
+                testDiv.className = 'test-item error';
+                testDiv.innerHTML = `
+                    <div class="status">测试 ${index}: ${testCase.name} - ❌ 异常</div>
+                    <div>URL: ${testCase.url}</div>
+                    <div>错误: ${error.message}</div>
+                `;
+                console.error(`测试异常: ${testCase.name}`, error);
+            }
+        }
+
+        window.clearResults = function() {
+            document.getElementById('test-results').innerHTML = '';
+        };
+
+        // 页面加载完成后自动运行测试
+        window.addEventListener('load', () => {
+            console.log('🚀 开始纯前端B站解析测试');
+            setTimeout(runAllTests, 1000);
+        });
+    </script>
+</body>
+</html>

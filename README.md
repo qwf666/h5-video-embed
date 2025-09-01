@@ -2,9 +2,20 @@
 
 > 前端优先的现代化视频嵌入组件库，支持国内外主流视频平台，具备智能解析和前后端分离架构。
 
-[![npm version](https://img.shields.io/npm/v/h5-video-embed.svg)](https://www.npmjs.com/package/h5-video-embed)
-[![license](https://img.shields.io/npm/l/h5-video-embed.svg)](https://github.com/your-username/h5-video-embed/blob/master/LICENSE)
-[![downloads](https://img.shields.io/npm/dm/h5-video-embed.svg)](https://www.npmjs.com/package/h5-video-embed)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-h5--video--embed-blue?logo=github)](https://github.com/qwf666/h5-video-embed)
+[![Vercel Demo](https://img.shields.io/badge/Vercel-Live%20Demo-000000?logo=vercel)](https://h5-video-embed-demo-app.vercel.app)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/qwf666/h5-video-embed/blob/master/LICENSE)
+
+## 🌐 在线演示
+
+**🎮 实时演示**: [https://h5-video-embed-demo-app.vercel.app](https://h5-video-embed-demo-app.vercel.app)
+
+**📺 功能展示**:
+- ✅ B站、YouTube、Vimeo等平台视频解析
+- ✅ 三种解析模式切换演示
+- ✅ 前后端分离架构展示
+- ✅ 实时解析状态监控
+- ✅ 响应式设计适配
 
 ## ✨ 特性
 
@@ -227,7 +238,7 @@ npm start  # 端口3001
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/h5-video-embed.git
+git clone https://github.com/qwf666/h5-video-embed.git
 cd h5-video-embed
 
 # 安装依赖
@@ -383,6 +394,37 @@ VIMEO_ACCESS_TOKEN=your_vimeo_token
 NODE_ENV=production
 ```
 
+## 🧪 API 测试
+
+### 在线API端点
+
+**基础URL**: `https://h5-video-embed-demo-app.vercel.app`
+
+#### 可用端点
+
+| 端点 | 方法 | 功能 | 示例 |
+|------|------|------|------|
+| `/api/test` | GET | 基础测试 | [测试链接](https://h5-video-embed-demo-app.vercel.app/api/test) |
+| `/api/video/parse` | POST | 通用解析 | 支持B站、YouTube、Vimeo |
+| `/api/proxy/bilibili/parse` | POST | B站专用 | 完整B站解析 |
+
+#### 测试示例
+
+```bash
+# 基础测试
+curl https://h5-video-embed-demo-app.vercel.app/api/test
+
+# B站视频解析
+curl -X POST https://h5-video-embed-demo-app.vercel.app/api/proxy/bilibili/parse \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://www.bilibili.com/video/BV1GJ411x7h7"}'
+
+# 通用视频解析
+curl -X POST https://h5-video-embed-demo-app.vercel.app/api/video/parse \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}'
+```
+
 ## 📊 性能数据
 
 ### 解析速度对比
@@ -494,10 +536,10 @@ NODE_ENV=production
 
 ## 📞 支持
 
-- 📧 邮箱: your-email@example.com
-- 💬 讨论: [GitHub Discussions](https://github.com/your-username/h5-video-embed/discussions)
-- 🐛 问题: [GitHub Issues](https://github.com/your-username/h5-video-embed/issues)
-- 📖 文档: [Wiki](https://github.com/your-username/h5-video-embed/wiki)
+- 📧 邮箱: qwf88639@gmail.com
+- 💬 讨论: [GitHub Discussions](https://github.com/qwf666/h5-video-embed/discussions)
+- 🐛 问题: [GitHub Issues](https://github.com/qwf666/h5-video-embed/issues)
+- 📖 文档: [Wiki](https://github.com/qwf666/h5-video-embed/wiki)
 
 ---
 
@@ -505,8 +547,8 @@ NODE_ENV=production
 
 **如果这个项目对你有帮助，请考虑给一个 ⭐ Star！**
 
-[![GitHub stars](https://img.shields.io/github/stars/your-username/h5-video-embed.svg?style=social&label=Star)](https://github.com/your-username/h5-video-embed)
+[![GitHub stars](https://img.shields.io/github/stars/qwf666/h5-video-embed.svg?style=social&label=Star)](https://github.com/qwf666/h5-video-embed)
 
-Made with ❤️ by [Your Name](https://github.com/your-username)
+Made with ❤️ by [qwf666](https://github.com/qwf666)
 
 </div>
