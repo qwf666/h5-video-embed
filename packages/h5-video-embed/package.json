@@ -1,36 +1,64 @@
 {
   "name": "h5-video-embed",
   "version": "1.0.0",
-  "description": "H5 视频嵌入 React 组件库",
-  "main": "src/index.js",
-  "module": "src/index.js",
+  "description": "一个用于嵌入和播放各种视频平台内容的 React 组件库，支持 B站、YouTube、抖音等多个平台的纯前端解析",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "development": "./src/index.js",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.js"
-    }
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/style.css": "./dist/style.css"
   },
   "files": [
     "dist",
-    "src"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
+    "prepublishOnly": "npm run build",
+    "publish:interactive": "node scripts/publish.js",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
-    "test": "vitest"
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [
     "react",
     "video",
     "embed",
     "player",
-    "h5"
+    "h5",
+    "bilibili",
+    "youtube",
+    "douyin",
+    "tencent",
+    "frontend-parsing",
+    "video-parser",
+    "chinese-video-platforms"
   ],
-  "author": "",
+  "author": {
+    "name": "breezeqi",
+    "email": "qwf88639@gmail.com"
+  },
   "license": "MIT",
+  "homepage": "https://github.com/qwf666/h5-video-embed#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qwf666/h5-video-embed.git",
+    "directory": "packages/h5-video-embed"
+  },
+  "bugs": {
+    "url": "https://github.com/qwf666/h5-video-embed/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
@@ -49,5 +77,9 @@
     "vite-plugin-dts": "^3.0.0",
     "vitest": "^0.34.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  }
 }

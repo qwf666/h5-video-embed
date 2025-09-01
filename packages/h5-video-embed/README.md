@@ -1,17 +1,21 @@
 # H5 Video Embed
 
-一个用于嵌入和播放各种视频平台内容的 React 组件库。
+[![npm version](https://badge.fury.io/js/h5-video-embed.svg)](https://badge.fury.io/js/h5-video-embed)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 特性
+一个用于嵌入和播放各种视频平台内容的 React 组件库，专注于中国视频平台的纯前端解析。
 
-- 🎥 支持多种视频平台（YouTube、Bilibili、Vimeo 等）
-- 📱 响应式设计，适配移动端
-- 🎨 可自定义样式和主题
-- ⚡ 轻量级，无额外依赖
-- 🔧 TypeScript 支持
-- 🎮 丰富的播放控制选项
+## ✨ 特性
 
-## 安装
+- 🎥 **多平台支持**: Bilibili、YouTube、抖音、腾讯视频、西瓜视频、快手、Vimeo
+- ⚡ **纯前端解析**: 支持完全不依赖后端的前端解析模式
+- 🇨🇳 **中国平台优化**: 特别优化了国内视频平台的解析和播放
+- 📱 **响应式设计**: 完美适配桌面端和移动端
+- 🎨 **可自定义**: 丰富的配置选项和样式定制
+- 🔧 **TypeScript**: 完整的 TypeScript 类型定义
+- 🚀 **轻量级**: 无额外依赖，打包体积小
+
+## 📦 安装
 
 ```bash
 npm install h5-video-embed
