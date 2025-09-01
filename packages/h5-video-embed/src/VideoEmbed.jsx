@@ -132,6 +132,8 @@ const VideoEmbed = ({
   serverUrl = 'http://localhost:3001', // 作为CORS代理使用
   youtubeApiKey = null, // YouTube API密钥
   preferFrontend = true, // 优先使用前端解析
+  strictFrontendOnly = false, // 严格前端模式：不允许调用后端
+  forceBackendOnly = false, // 强制后端模式：只使用后端解析
   onError,
   onLoad,
   className = '',
@@ -160,7 +162,7 @@ const VideoEmbed = ({
     }
 
     fetchVideoData();
-  }, [url, preferFrontend]);
+  }, [url, preferFrontend, strictFrontendOnly, forceBackendOnly]);
 
   const fetchVideoData = async () => {
     setLoading(true);
@@ -168,60 +170,100 @@ const VideoEmbed = ({
     setParseSource(null);
     
     try {
+      // 判断解析模式
+      if (forceBackendOnly) {
+        // 强制后端模式
+        console.log('🔄 强制使用后端解析');
+        await performBackendParsing();
+        return;
+      }
+      
+      if (strictFrontendOnly) {
+        // 严格前端模式，不允许调用后端
+        console.log('⚡ 严格前端解析模式 - 不会调用后端接口');
+        await performFrontendParsing(true);
+        return;
+      }
+      
       if (preferFrontend && parserRef.current) {
+        // 优先前端模式，失败时可降级
         console.log('🎯 优先使用前端解析');
         
         try {
-          const result = await parserRef.current.parseVideo(url);
-          setVideoData(result.data);
-          setParseSource(result.source);
-          onLoad && onLoad(result.data, result.source);
-          
-          // 如果前端解析成功但建议使用后端，给出提示
-          if (result.data.needsBackendParsing) {
-            console.warn('💡 建议使用后端解析获取更完整的信息');
-          }
-          
+          await performFrontendParsing(false);
           return;
         } catch (frontendError) {
           console.warn('前端解析失败:', frontendError.message);
           
-          // 如果前端解析失败，尝试后端解析
+          // 如果不是严格前端模式，尝试后端解析
           console.log('🔄 降级到后端解析');
+          await performBackendParsing();
+          return;
         }
       }
       
-      // 后端解析
-      const response = await fetch(`${serverUrl}/api/video/parse`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: url })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`后端解析失败: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        setVideoData(result.data);
-        setParseSource('backend');
-        onLoad && onLoad(result.data, 'backend');
-      } else {
-        throw new Error(result.message || '视频解析失败');
-      }
+      // 默认后端解析
+      await performBackendParsing();
       
     } catch (err) {
       // 确定当前解析模式
-      const currentMode = preferFrontend ? 'frontend' : 'backend';
+      let currentMode = 'auto';
+      if (strictFrontendOnly) currentMode = 'frontend';
+      else if (forceBackendOnly) currentMode = 'backend';
+      else if (preferFrontend) currentMode = 'frontend';
+      else currentMode = 'backend';
+      
       const errorMsg = getDetailedErrorMessage(err, url, currentMode);
       setError(errorMsg);
       onError && onError(errorMsg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 执行前端解析
+  const performFrontendParsing = async (isStrict = false) => {
+    if (!parserRef.current) {
+      throw new Error('前端解析器未初始化');
+    }
+    
+    const result = await parserRef.current.parseVideo(url);
+    setVideoData(result.data);
+    setParseSource(result.source);
+    onLoad && onLoad(result.data, result.source);
+    
+    // 如果前端解析成功但建议使用后端，给出提示
+    if (result.data.needsBackendParsing && !isStrict) {
+      console.warn('💡 建议使用后端解析获取更完整的信息');
+    }
+    
+    if (isStrict && result.data.needsBackendParsing) {
+      console.info('ℹ️ 严格前端模式：已获取基础信息，如需完整信息可切换到后端模式');
+    }
+  };
+
+  // 执行后端解析
+  const performBackendParsing = async () => {
+    const response = await fetch(`${serverUrl}/api/video/parse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url: url })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`后端解析失败: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      setVideoData(result.data);
+      setParseSource('backend');
+      onLoad && onLoad(result.data, 'backend');
+    } else {
+      throw new Error(result.message || '视频解析失败');
     }
   };
 
