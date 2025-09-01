@@ -2,5 +2,51 @@
   "version": 2,
   "buildCommand": "pnpm -w run vercel-build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --frozen-lockfile"
+  "installCommand": "pnpm install --frozen-lockfile",
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/test",
+      "dest": "/api/test.js"
+    },
+    {
+      "src": "/api/video/parse",
+      "dest": "/api/video/parse.js"
+    },
+    {
+      "src": "/api/proxy/parse",
+      "dest": "/api/proxy/parse.js"
+    },
+    {
+      "src": "/api/proxy/bilibili/parse",
+      "dest": "/api/proxy/bilibili/parse.js"
+    },
+    {
+      "src": "/api/video",
+      "dest": "/api/video.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
 }

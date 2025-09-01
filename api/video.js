@@ -1,5 +1,5 @@
 // Vercel Serverless Function for video parsing
-import { VideoParser } from '../packages/h5-video-embed/src/parsers/index.js';
+// 注意：这个文件暂时不使用复杂的导入，避免依赖问题
 
 // CORS headers
 const corsHeaders = {
@@ -36,27 +36,28 @@ export default async function handler(req, res) {
       });
     }
 
-    // 创建解析器实例
-    const parser = new VideoParser({
-      corsProxy: null, // Vercel环境下不需要代理
-      youtubeApiKey: process.env.YOUTUBE_API_KEY
-    });
-
     console.log(`🎯 开始解析视频: ${url}`);
 
+    // 暂时重定向到更完整的 /api/video/parse 端点
+    console.log('🔄 重定向到 /api/video/parse 端点');
+    
+    // 由于这是内部重定向，我们需要重新构造请求
+    const parseUrl = `${req.headers.host ? `https://${req.headers.host}` : ''}/api/video/parse`;
+    
     try {
-      // 尝试前端解析方法
-      const result = await parser.parseVideo(url);
-      
-      return res.status(200).json({
-        success: true,
-        data: result.data,
-        message: '视频解析成功',
-        source: result.source || 'serverless'
+      const response = await fetch(parseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url })
       });
-
+      
+      const result = await response.json();
+      return res.status(response.status).json(result);
+      
     } catch (error) {
-      console.error('视频解析失败:', error.message);
+      console.error('内部重定向失败:', error.message);
       
       // 返回基础错误信息
       return res.status(200).json({
