@@ -1,2 +1,4 @@
 packages:
-  - 'packages/*'
+  - packages/*
+
+registry: https://registry.npmjs.org/
