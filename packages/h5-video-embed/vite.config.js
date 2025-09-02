@@ -9,6 +9,10 @@ export default defineConfig({
     react(),
     dts({
       insertTypesEntry: true,
+      include: ['src/**/*'],
+      exclude: ['src/**/*.test.*', 'src/**/*.spec.*'],
+      outDir: 'dist',
+      entryRoot: 'src'
     }),
   ],
   build: {
@@ -19,11 +23,12 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'react/jsx-runtime'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'React',
         },
       },
     },

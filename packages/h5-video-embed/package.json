@@ -1,18 +1,16 @@
 {
   "name": "h5-video-embed",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "一个用于嵌入和播放各种视频平台内容的 React 组件库，支持 B站、YouTube、抖音等多个平台的纯前端解析",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "development": "./src/index.js",
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js",
       "types": "./dist/index.d.ts"
-    },
-    "./dist/style.css": "./dist/style.css"
+    }
   },
   "files": [
     "dist",
