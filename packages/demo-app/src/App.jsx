@@ -19,6 +19,7 @@ const DEMO_VIDEOS = [
   },
   {
     title: "抖音视频示例",
+    // url: "https://v.douyin.com/U-jFtHzl8u8/",
     url: "https://www.douyin.com/video/7234567890123456789",
     platform: "抖音", 
     description: "需要CORS代理，展示降级策略",
